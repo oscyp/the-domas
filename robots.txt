@@ -1,0 +1,6 @@
+# Robots.txt for thedomas.dev
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://thedomas.dev/sitemap.xml
