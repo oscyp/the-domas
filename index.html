@@ -370,6 +370,71 @@
     .project:nth-child(even) { direction: rtl; }
     .project:nth-child(even) > * { direction: ltr; }
 
+    /* WORKED WITH */
+    .worked-with {
+      text-align: center;
+      padding-top: 2rem;
+      padding-bottom: 4rem;
+    }
+
+    .worked-with .section-heading {
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    .worked-with-subtitle {
+      color: var(--text-tertiary);
+      font-size: 0.9rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .logos-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2.5rem 3rem;
+      align-items: center;
+    }
+
+    .company-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-tertiary);
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      transition: color 0.2s;
+      text-decoration: none;
+    }
+
+    .company-logo:hover {
+      color: var(--text-secondary);
+    }
+
+    .company-logo img {
+      height: 28px;
+      width: auto;
+      filter: grayscale(100%) opacity(0.6);
+      transition: filter 0.2s;
+    }
+
+    .company-logo:hover img {
+      filter: grayscale(0%) opacity(1);
+    }
+
+    @media (max-width: 768px) {
+      .logos-row {
+        gap: 1.5rem 2rem;
+      }
+      .company-logo {
+        font-size: 0.95rem;
+      }
+      .company-logo img {
+        height: 22px;
+      }
+    }
+
     /* ABOUT */
     .about-grid {
       display: grid;
@@ -535,6 +600,7 @@
   <ul class="nav-links" id="navLinks">
     <li><a href="#projects">Projects</a></li>
     <!-- <li><a href="#partner-projects">Partner Projects</a></li> -->
+    <li><a href="blog/">Blog</a></li>
     <li><a href="#about">About</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
@@ -662,6 +728,41 @@
       </div>
     </div>
 
+  </div>
+</section>
+
+<!-- WORKED WITH -->
+<section id="worked-with" class="worked-with reveal">
+  <h2 class="section-heading">Worked With</h2>
+  <p class="worked-with-subtitle">Companies I've contributed to as a software engineer</p>
+  <div class="logos-row">
+    <a href="https://www.chevron.com" target="_blank" rel="noopener" class="company-logo">
+      <img src="assets/icons/companies/chevron.svg" alt="Chevron">Chevron
+    </a>
+    <a href="https://www.abb.com" target="_blank" rel="noopener" class="company-logo">
+      <img src="assets/icons/companies/abb.svg" alt="ABB">ABB
+    </a>
+    <a href="https://www.avanade.com" target="_blank" rel="noopener" class="company-logo">
+      <img src="assets/icons/companies/avanade.svg" alt="Avanade">Avanade
+    </a>
+    <a href="https://amh.com" target="_blank" rel="noopener" class="company-logo">
+      <img src="assets/icons/companies/amh.svg" alt="AMH">AMH
+    </a>
+    <a href="https://oeconnection.com" target="_blank" rel="noopener" class="company-logo">
+      <img src="assets/icons/companies/oec.png" alt="OEC">OEC
+    </a>
+    <a href="https://www.gravity9.com" target="_blank" rel="noopener" class="company-logo">
+      <img src="assets/icons/companies/gravity9.png" alt="Gravity9">Gravity9
+    </a>
+    <a href="https://www.bal.com" target="_blank" rel="noopener" class="company-logo">
+      <img src="assets/icons/companies/bal.svg" alt="BAL">BAL
+    </a>
+    <a href="https://rekord.com.pl" target="_blank" rel="noopener" class="company-logo">
+      <img src="assets/icons/companies/rekord-si.png" alt="Rekord SI">Rekord SI
+    </a>
+    <a href="https://www.ige-xao.com" target="_blank" rel="noopener" class="company-logo">
+      <img src="assets/icons/companies/ige-xao.jpeg" alt="IGE+XAO">IGE+XAO
+    </a>
   </div>
 </section>
 

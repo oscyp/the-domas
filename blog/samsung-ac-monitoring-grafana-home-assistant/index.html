@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monitoring Samsung AC with Grafana and Home Assistant — Patryk Domasik</title>
+  <meta name="description" content="How I went from wanting temperature charts to running a full smart home setup with Raspberry Pi and Home Assistant.">
+  <link rel="shortcut icon" href="../../favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #fafaf9;
+      --bg-alt: #f5f5f4;
+      --bg-card: #ffffff;
+      --text: #1c1917;
+      --text-secondary: #57534e;
+      --text-tertiary: #a8a29e;
+      --accent: #2563eb;
+      --accent-light: #eff6ff;
+      --border: #e7e5e4;
+      --border-hover: #d6d3d1;
+      --radius: 12px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Space Grotesk', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--accent); }
+    a:hover { text-decoration: none; }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 0 2rem;
+      height: 64px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(250, 250, 249, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-name {
+      font-weight: 700;
+      font-size: 1.05rem;
+      text-decoration: none;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .nav-links { display: flex; gap: 1.75rem; list-style: none; }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--text); }
+
+    .nav-hamburger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .nav-hamburger span {
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: var(--text);
+      margin: 4px 0;
+      transition: 0.3s;
+    }
+
+    /* ARTICLE */
+    article {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 140px 2rem 5rem;
+    }
+
+    .article-header {
+      margin-bottom: 3rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      margin-bottom: 2rem;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover { color: var(--text); }
+
+    .back-link svg { width: 14px; height: 14px; }
+
+    .article-meta {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .article-date {
+      font-size: 0.8rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-tertiary);
+    }
+
+    .article-tag {
+      padding: 0.15rem 0.5rem;
+      font-size: 0.7rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      background: var(--accent-light);
+      color: var(--accent);
+      border-radius: 4px;
+    }
+
+    .article-title {
+      font-size: clamp(1.8rem, 4vw, 2.4rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+
+    .article-hero {
+      width: 100%;
+      max-height: 400px;
+      object-fit: cover;
+      border-radius: var(--radius);
+      margin-top: 2rem;
+    }
+
+    /* ARTICLE CONTENT */
+    .article-content {
+      font-size: 1.05rem;
+      line-height: 1.8;
+    }
+
+    .article-content p {
+      margin-bottom: 1.5rem;
+      color: var(--text-secondary);
+    }
+
+    .article-content h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+
+    .article-content h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      color: var(--text);
+    }
+
+    .article-content ul, .article-content ol {
+      margin-bottom: 1.5rem;
+      padding-left: 1.5rem;
+      color: var(--text-secondary);
+    }
+
+    .article-content li {
+      margin-bottom: 0.5rem;
+    }
+
+    .article-content blockquote {
+      border-left: 3px solid var(--accent);
+      padding-left: 1.25rem;
+      margin: 2rem 0;
+      font-style: italic;
+      color: var(--text-secondary);
+    }
+
+    .article-content code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9em;
+      background: var(--bg-alt);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+    }
+
+    .article-content pre {
+      background: var(--text);
+      color: #f5f5f4;
+      padding: 1.25rem 1.5rem;
+      border-radius: var(--radius);
+      overflow-x: auto;
+      margin: 1.5rem 0;
+    }
+
+    .article-content pre code {
+      background: none;
+      padding: 0;
+      color: inherit;
+    }
+
+    .article-content img {
+      max-width: 100%;
+      border-radius: var(--radius);
+      margin: 2rem 0;
+    }
+
+    .article-content strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* AUTHOR */
+    .author-card {
+      display: flex;
+      gap: 1.25rem;
+      align-items: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-top: 4rem;
+    }
+
+    .author-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--bg-alt);
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .author-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .author-info h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .author-info p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-tertiary);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--border);
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    footer a {
+      color: var(--text-secondary);
+      text-decoration: none;
+    }
+
+    footer a:hover { color: var(--text); }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(250,250,249,0.97);
+        backdrop-filter: blur(12px);
+        padding: 1rem 2rem 1.5rem;
+        gap: 0.75rem;
+        border-bottom: 1px solid var(--border);
+      }
+      .nav-hamburger { display: block; }
+
+      article {
+        padding-top: 110px;
+      }
+
+      .author-card {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="../../" class="nav-name">patryk domasik</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="../../#projects">Projects</a></li>
+    <li><a href="../" class="active">Blog</a></li>
+    <li><a href="../../#about">About</a></li>
+    <li><a href="../../#contact">Contact</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<article>
+  <header class="article-header">
+    <a href="../" class="back-link">
+      <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Back to blog
+    </a>
+    <div class="article-meta">
+      <span class="article-date">February 10, 2026</span>
+      <span class="article-tag">Home Lab</span>
+    </div>
+    <h1 class="article-title">Monitoring Samsung AC with Grafana and Home Assistant</h1>
+    <img src="../../assets/blog/samsung-ac-monitoring-grafana-home-assistant/samsung-ac-monitoring-grafana-home-assistant-hero.jpeg" alt="Home Assistant dashboard with Samsung AC monitoring" class="article-hero">
+  </header>
+
+  <div class="article-content">
+    <p>It started with a simple question: <strong>can I see my air conditioning temperature history on a nice chart?</strong> What followed was a rabbit hole that led me from Grafana dashboards to running a full Home Assistant setup on a Raspberry Pi.</p>
+
+    <h2>The Initial Idea</h2>
+
+    <p>I have a Samsung air conditioner that connects to the SmartThings app. The app works fine for controlling the AC, but it doesn't give you any historical data. I wanted to see temperature trends over time—when does the AC kick in most often? How does outdoor temperature affect indoor climate? Basic stuff that the app simply doesn't provide.</p>
+
+    <p>So I started googling. How do you get data out of SmartThings? How do you visualize it? And that's when I found <a href="https://community.smartthings.com/t/grafana-influxdb-live-monitoring-of-a-smartthings-samsung-air-conditioner/226969" target="_blank" rel="noopener">this post on the SmartThings community</a>—someone had already figured out how to pipe SmartThings data into InfluxDB and display it in Grafana.</p>
+
+    <h2>Setting Up the Raspberry Pi</h2>
+
+    <p>I ordered a <strong>Raspberry Pi 4B</strong>. A few days later, I had it running with:</p>
+
+    <ul>
+      <li>Raspberry Pi OS</li>
+      <li>InfluxDB for time-series data storage</li>
+      <li>Grafana for visualization</li>
+      <li>A custom script to pull data from SmartThings API</li>
+    </ul>
+
+    <p>After some configuration, I had my first dashboard. Temperature readings, humidity levels, AC state (on/off), power consumption—all updating in real time. It was satisfying to finally see the data I'd been curious about.</p>
+
+    <h2>The Problem with Custom Scripts</h2>
+
+    <p>The setup worked, but it was fragile. The SmartThings API would occasionally change, breaking my scripts. Authentication tokens expired. The whole thing required maintenance I didn't want to deal with.</p>
+
+    <p>I kept hearing about <a href="https://www.home-assistant.io/" target="_blank" rel="noopener">Home Assistant</a>—an open-source home automation platform. People said it "just works" with Samsung SmartThings. I was skeptical, but decided to try it.</p>
+
+    <h2>Migrating to Home Assistant</h2>
+
+    <p>I wiped the Pi and installed Home Assistant OS. The setup was surprisingly smooth:</p>
+
+    <ol>
+      <li>Flash the Home Assistant image to SD card</li>
+      <li>Boot the Pi and wait for initialization</li>
+      <li>Access the web interface and create an account</li>
+      <li>Add the SmartThings integration—just OAuth login, done</li>
+    </ol>
+
+    <p>Within 30 minutes, all my Samsung devices were showing up in Home Assistant. No custom scripts. No API wrangling. It just... worked.</p>
+
+    <h2>What I Gained</h2>
+
+    <p>Home Assistant gave me way more than I expected:</p>
+
+    <ul>
+      <li><strong>Built-in history and graphs</strong> — No need for separate InfluxDB/Grafana setup (though you can still add them if you want)</li>
+      <li><strong>Automations</strong> — Turn on AC when temperature exceeds threshold, send notifications when humidity is too high</li>
+      <li><strong>Energy monitoring</strong> — Track power consumption over time</li>
+      <li><strong>Other integrations</strong> — I've since added smart plugs, lights, and sensors</li>
+    </ul>
+
+    <p>What started as "I want a temperature chart" turned into a proper smart home setup.</p>
+
+    <h2>Lessons Learned</h2>
+
+    <p>Sometimes the custom solution isn't the best solution. I spent hours writing scripts and debugging API issues when a mature platform already solved the problem.</p>
+
+    <p>That said, the Grafana detour wasn't wasted time. I learned about time-series databases, data visualization, and the SmartThings ecosystem. When I eventually added Grafana back to Home Assistant (for more advanced dashboards), I already knew how to use it.</p>
+
+    <blockquote>
+      Start with the simplest solution that might work. You can always add complexity later.
+    </blockquote>
+
+    <p>If you're looking to monitor your Samsung AC (or any SmartThings device), skip the custom scripts and go straight to Home Assistant. Your future self will thank you.</p>
+  </div>
+
+  <div class="author-card">
+    <div class="author-avatar">
+      <img src="../../assets/patryk-photo.webp" alt="Patryk Domasik">
+    </div>
+    <div class="author-info">
+      <h4>Patryk Domasik</h4>
+      <p>Software engineer building web products with React, .NET, and Azure.</p>
+    </div>
+  </div>
+</article>
+
+<footer>
+  <p>&copy; 2026 Patryk Domasik · <a href="../../">Back to home</a></p>
+</footer>
+
+<script>
+  // Mobile menu
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('navLinks');
+  hamburger.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => navLinks.classList.remove('open'));
+  });
+</script>
+
+</body>
+</html>
