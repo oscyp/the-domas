@@ -1,9 +1,768 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>thedomas.dev</title>
-  </head>
-  <body>
-    <h1>Hello, I’m Domas 👋</h1>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patryk Domasik — Software Engineer</title>
+  <meta name="description" content="Patryk Domasik — Software Engineer building web products with React, .NET, and Azure.">
+  <link rel="shortcut icon" href="favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #fafaf9;
+      --bg-alt: #f5f5f4;
+      --bg-card: #ffffff;
+      --text: #1c1917;
+      --text-secondary: #57534e;
+      --text-tertiary: #a8a29e;
+      --accent: #2563eb;
+      --accent-light: #eff6ff;
+      --border: #e7e5e4;
+      --border-hover: #d6d3d1;
+      --radius: 12px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Space Grotesk', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 0 2rem;
+      height: 64px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(250, 250, 249, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-name {
+      font-weight: 700;
+      font-size: 1.05rem;
+      text-decoration: none;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .nav-links { display: flex; gap: 1.75rem; list-style: none; }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-hamburger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .nav-hamburger span {
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: var(--text);
+      margin: 4px 0;
+      transition: 0.3s;
+    }
+
+    /* HERO */
+    .hero {
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 140px 2rem 80px;
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .hero-text h1 {
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-text p {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      max-width: 520px;
+      margin-bottom: 2rem;
+    }
+
+    .hero-links {
+      display: flex;
+      gap: 1.25rem;
+      align-items: center;
+    }
+
+    .hero-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      color: var(--text-secondary);
+      transition: color 0.2s;
+    }
+
+    .hero-links a:hover { color: var(--text); }
+
+    .hero-links a svg { width: 18px; height: 18px; }
+
+    .hero-links .icon {
+      width: 18px;
+      height: 18px;
+    }
+
+    .hero-links .link-primary {
+      padding: 0.6rem 1.4rem;
+      background: var(--text);
+      color: #fff;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+
+    .hero-links .link-primary:hover { background: #292524; }
+
+    .hero-photo {
+      width: 280px;
+      height: 340px;
+      border-radius: var(--radius);
+      background: var(--bg-alt);
+      border: 2px dashed var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-tertiary);
+      font-size: 0.85rem;
+      text-align: center;
+      padding: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: var(--radius);
+    }
+
+    /* SECTIONS */
+    section {
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+    }
+
+    .section-heading {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 2.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-heading::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* TECH */
+    .tech-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tech-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.45rem 0.9rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .tech-item:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .tech-item svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .tech-item img {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .icon {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .icon img {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* PROJECTS */
+    .projects-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .project {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .project:hover {
+      border-color: var(--border-hover);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    }
+
+    .project-preview {
+      background: var(--bg-alt);
+      min-height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .project-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .project-preview-placeholder {
+      color: var(--text-tertiary);
+      font-size: 0.8rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .project-info {
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .project-name {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+    }
+
+    .project-desc {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+
+    .project-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .project-tag {
+      padding: 0.2rem 0.55rem;
+      font-size: 0.72rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      background: var(--accent-light);
+      color: var(--accent);
+      border-radius: 4px;
+    }
+
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-decoration: none;
+      transition: gap 0.2s;
+    }
+
+    .project-link:hover { gap: 0.6rem; }
+
+    .project-users {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.78rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      color: var(--text-tertiary);
+      margin-bottom: 0.75rem;
+    }
+
+    .project-users svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .project-link svg { width: 14px; height: 14px; }
+
+    /* Alternate project layout */
+    .project:nth-child(even) { direction: rtl; }
+    .project:nth-child(even) > * { direction: ltr; }
+
+    /* ABOUT */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    .about-text p {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .about-text strong { color: var(--text); }
+
+    .about-aside {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .about-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+    }
+
+    .about-card-label {
+      font-size: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.35rem;
+    }
+
+    .about-card-value {
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+
+    /* CONTACT */
+    .contact-section { text-align: center; }
+
+    .contact-section p {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      margin-bottom: 2rem;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .contact-row {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .contact-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.25rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .contact-btn:hover {
+      border-color: var(--border-hover);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+
+    .contact-btn svg { width: 18px; height: 18px; color: var(--text-secondary); }
+
+    .contact-btn .icon {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-tertiary);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--border);
+      max-width: 1060px;
+      margin: 0 auto;
+    }
+
+    /* SCROLL REVEAL */
+    .reveal {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(250,250,249,0.97);
+        backdrop-filter: blur(12px);
+        padding: 1rem 2rem 1.5rem;
+        gap: 0.75rem;
+        border-bottom: 1px solid var(--border);
+      }
+      .nav-hamburger { display: block; }
+
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        padding-top: 110px;
+        padding-bottom: 3rem;
+      }
+
+      .hero-photo {
+        width: 200px;
+        height: 240px;
+        margin: 0 auto;
+        order: -1;
+      }
+
+      .project {
+        grid-template-columns: 1fr;
+      }
+
+      .project:nth-child(even) { direction: ltr; }
+
+      .project-preview { min-height: 180px; }
+
+      .about-grid { grid-template-columns: 1fr; }
+
+      section { padding: 3rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-name">patryk domasik</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#projects">Projects</a></li>
+    <!-- <li><a href="#partner-projects">Partner Projects</a></li> -->
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-text">
+    <h1>I build web products that people actually use.</h1>
+    <p>Software engineer focused on React, .NET, and cloud infrastructure. Currently shipping SaaS tools and helping developers level up.</p>
+    <div class="hero-links">
+      <a href="#projects" class="link-primary">See my work</a>
+      <a href="https://github.com/oscyp" target="_blank" rel="noopener">
+        <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        GitHub
+      </a>
+      <a href="mailto:hello@thedomas.dev">
+        <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Email
+      </a>
+    </div>
+  </div>
+  <div class="hero-photo">
+    <img src="assets/patryk-photo.webp" alt="Patryk Domasik">
+  </div>
+</div>
+
+<!-- TECH -->
+<section id="tech" class="reveal">
+  <h2 class="section-heading">Stack</h2>
+  <div class="tech-list">
+    <span class="tech-item"><img src="assets/icons/react.svg" alt="React">React</span>
+    <span class="tech-item"><img src="assets/icons/nextdotjs.svg" alt="Next.js">Next.js</span>
+    <span class="tech-item"><img src="assets/icons/typescript.svg" alt="TypeScript">TypeScript</span>
+    <span class="tech-item"><img src="assets/icons/nodedotjs.svg" alt="Node.js">Node.js</span>
+    <span class="tech-item"><img src="assets/icons/dotnet.svg" alt=".NET">.NET</span>
+    <span class="tech-item"><img src="assets/icons/csharp.svg" alt="C#">C#</span>
+    <span class="tech-item"><img src="assets/icons/azure.svg" alt="Azure">Azure</span>
+    <span class="tech-item"><img src="assets/icons/postgresql.svg" alt="SQL">SQL</span>
+    <span class="tech-item"><img src="assets/icons/supabase.svg" alt="Supabase">Supabase</span>
+    <span class="tech-item"><img src="assets/icons/vercel.svg" alt="Vercel">Vercel</span>
+    <span class="tech-item"><img src="assets/icons/tailwindcss.svg" alt="Tailwind CSS">Tailwind CSS</span>
+    <span class="tech-item"><img src="assets/icons/git.svg" alt="Git">Git</span>
+    <span class="tech-item"><img src="assets/icons/grafana.svg" alt="Grafana">Grafana</span>
+    <span class="tech-item"><img src="assets/icons/launchdarkly.svg" alt="LaunchDarkly">LaunchDarkly</span>
+    <span class="tech-item"><img src="assets/icons/astro.svg" alt="Astro">Astro</span>
+    <span class="tech-item"><img src="assets/icons/stripe.svg" alt="Stripe">Stripe</span>
+    <span class="tech-item"><img src="assets/icons/postman.svg" alt="Postman">Postman</span>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <h2 class="section-heading reveal">Projects</h2>
+  <div class="projects-list">
+
+    <div class="project reveal">
+      <div class="project-preview">
+        <span class="project-preview-placeholder">
+          <img src="assets/remedy-app-og-image.webp" alt="Remedy app preview" >
+        </span>
+      </div>
+      <div class="project-info">
+        <h3 class="project-name">Remedy</h3>
+        <div class="project-users">
+          <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          300+ users
+        </div>
+        <p class="project-desc">A mobile app for tracking substance recovery. Users log patterns, triggers, and emotional states to build self-awareness and maintain progress over time.</p>
+        <div class="project-meta">
+          <span class="project-tag">React Native</span>
+          <span class="project-tag">Supabase</span>
+          <span class="project-tag">Mobile</span>
+        </div>
+        <a href="https://get-remedy.com" target="_blank" rel="noopener" class="project-link">
+          Visit site <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="project reveal">
+      <div class="project-preview">
+          <img src="assets/bigdevsoon-og-image.webp" alt="BigDevSoon app preview" >
+      </div>
+      <div class="project-info">
+        <h3 class="project-name">BigDevSoon</h3>
+        <div class="project-users">
+          <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          12k+ users
+        </div>
+        <p class="project-desc">A platform where developers practice by building real projects with Figma designs broken into tasks. Bridges the gap between following tutorials and shipping real work.</p>
+        <div class="project-meta">
+          <span class="project-tag">Next.js</span>
+          <span class="project-tag">TypeScript</span>
+          <span class="project-tag">EdTech</span>
+        </div>
+        <a href="https://bigdevsoon.me" target="_blank" rel="noopener" class="project-link">
+          Visit site <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="project reveal">
+      <div class="project-preview">
+          <img src="assets/jobtrackr-it-og-image.webp" alt="JobTrackr.it app preview" >
+      </div>
+      <div class="project-info">
+        <h3 class="project-name">JobTrackr.it</h3>
+        <div class="project-users">
+          <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          100+ users
+        </div>
+        <p class="project-desc">Helps job seekers stay organized. Tracks applications, scores resumes against ATS systems, compares salaries across currencies, and visualizes the interview pipeline.</p>
+        <div class="project-meta">
+          <span class="project-tag">React</span>
+          <span class="project-tag">Node.js</span>
+          <span class="project-tag">AI</span>
+        </div>
+        <a href="https://jobtrackr.it" target="_blank" rel="noopener" class="project-link">
+          Visit site <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PARTNER PROJECTS
+<section id="partner-projects">
+  <h2 class="section-heading reveal">Partner Projects</h2>
+  <div class="projects-list">
+
+    <div class="project reveal">
+      <div class="project-preview">
+        <span class="project-preview-placeholder">screenshot</span>
+      </div>
+      <div class="project-info">
+        <h3 class="project-name">BullAlert</h3>
+        <p class="project-desc">AI scanner that monitors Reddit around the clock to find momentum-driven penny stocks. Delivers tiered alerts so traders can act before broader market awareness kicks in.</p>
+        <div class="project-meta">
+          <span class="project-tag">AI/ML</span>
+          <span class="project-tag">Python</span>
+          <span class="project-tag">FinTech</span>
+        </div>
+        <a href="https://bullalert.ai" target="_blank" rel="noopener" class="project-link">
+          Visit site <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+-->
+
+<!-- ABOUT -->
+<section id="about">
+  <h2 class="section-heading reveal">About</h2>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p><strong>I'm Patryk</strong> — a software engineer who likes building things end-to-end. I work mostly with React and .NET, deploy to Azure and Vercel, and have shipped multiple products that real people pay for and depend on.</p>
+      <p>I started BigDevSoon to help other developers get better through practice. I built JobTrackr because job hunting shouldn't require a spreadsheet. And Remedy exists because I believe technology can support recovery.</p>
+      <p>I care about shipping, not talking about shipping.</p>
+    </div>
+    <div class="about-aside reveal">
+      <div class="about-card">
+        <div class="about-card-label">Location</div>
+        <div class="about-card-value">Poland</div>
+      </div>
+      <div class="about-card">
+        <div class="about-card-label">Focus</div>
+        <div class="about-card-value">Full-stack web + SaaS</div>
+      </div>
+      <div class="about-card">
+        <div class="about-card-label">Main stack</div>
+        <div class="about-card-value">React, .NET, Azure</div>
+      </div>
+      <div class="about-card">
+        <div class="about-card-label">Status</div>
+        <div class="about-card-value">Open to interesting projects</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact-section">
+  <h2 class="section-heading reveal" style="justify-content:center;">Contact</h2>
+  <p class="reveal">Have something in mind? I'm always up for a conversation about products, tech, or collaboration.</p>
+  <div class="contact-row reveal">
+    <a href="mailto:hello@thedomas.dev" class="contact-btn">
+      <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      hello@thedomas.dev
+    </a>
+    <a href="https://github.com/oscyp" target="_blank" rel="noopener" class="contact-btn">
+      <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+      GitHub
+    </a>
+    <a href="https://www.linkedin.com/in/patryk-domasik-b37612128/" target="_blank" rel="noopener" class="contact-btn">
+      <svg fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      LinkedIn
+    </a>
+  </div>
+</section>
+
+<footer>
+  <p>&copy; 2026 Patryk Domasik</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Mobile menu
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('navLinks');
+  hamburger.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => navLinks.classList.remove('open'));
+  });
+</script>
+
+</body>
 </html>
